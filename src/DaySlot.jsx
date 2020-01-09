@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import Selection, { getBoundsForNode } from './Selection';
@@ -39,20 +40,20 @@ function overlaps(event, events, { startAccessor, endAccessor }, last) {
 let DaySlot = React.createClass({
 
   propTypes: {
-    events: React.PropTypes.array.isRequired,
-    step: React.PropTypes.number.isRequired,
-    min: React.PropTypes.instanceOf(Date).isRequired,
-    max: React.PropTypes.instanceOf(Date).isRequired,
+    events: PropTypes.array.isRequired,
+    step: PropTypes.number.isRequired,
+    min: PropTypes.instanceOf(Date).isRequired,
+    max: PropTypes.instanceOf(Date).isRequired,
 
     allDayAccessor: accessor.isRequired,
     startAccessor: accessor.isRequired,
     endAccessor: accessor.isRequired,
 
-    selectable: React.PropTypes.bool,
-    eventOffset: React.PropTypes.number,
+    selectable: PropTypes.bool,
+    eventOffset: PropTypes.number,
 
-    onSelectSlot: React.PropTypes.func.isRequired,
-    onSelectEvent: React.PropTypes.func.isRequired
+    onSelectSlot: PropTypes.func.isRequired,
+    onSelectEvent: PropTypes.func.isRequired
   },
 
   getInitialState() {

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import uncontrollable from 'uncontrollable';
 import cn from 'classnames';
 import {
@@ -162,7 +163,7 @@ let Calendar = React.createClass({
     /**
      * Determines the selectable time increments in week and day views
      */
-    step: React.PropTypes.number,
+    step: PropTypes.number,
 
     /**
      * switch the calendar to a `right-to-left` read direction.

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
@@ -11,11 +12,11 @@ class DisplayCells extends React.Component {
 
   static propTypes = {
     backgroundWrapperComponent: elementType,
-    selectable: React.PropTypes.bool,
-    onSelect: React.PropTypes.func,
-    slots: React.PropTypes.number,
-    values: React.PropTypes.arrayOf(React.PropTypes.instanceOf(Date)),
-    type: React.PropTypes.string
+    selectable: PropTypes.bool,
+    onSelect: PropTypes.func,
+    slots: PropTypes.number,
+    values: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
+    type: PropTypes.string
   }
 
   state = { selecting: false }

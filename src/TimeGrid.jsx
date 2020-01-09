@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
@@ -32,11 +33,11 @@ export default class TimeGrid extends Component {
     ...DayColumn.propTypes,
     ...TimeColumn.propTypes,
 
-    step: React.PropTypes.number,
-    min: React.PropTypes.instanceOf(Date),
-    max: React.PropTypes.instanceOf(Date),
+    step: PropTypes.number,
+    min: PropTypes.instanceOf(Date),
+    max: PropTypes.instanceOf(Date),
     dayFormat: dateFormat,
-    rtl: React.PropTypes.bool
+    rtl: PropTypes.bool
   }
 
   static defaultProps = {
