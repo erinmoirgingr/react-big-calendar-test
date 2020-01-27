@@ -3,7 +3,7 @@ import React from 'react';
 import EventRowMixin from './EventRowMixin';
 import { eventLevels } from './utils/eventLevels';
 import message from './utils/messages';
-import range from 'lodash/utility/range';
+import _ from "lodash";
 
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot;
 let eventsInSlot = (segments, slot) => segments.filter(seg => isSegmentInSlot(seg, slot)).length
@@ -71,7 +71,7 @@ let EventRow = React.createClass({
   canRenderSlotEvent(slot, span){
     let { segments } = this.props;
 
-    return range(slot, slot + span).every(s => {
+    return _.range(slot, slot + span).every(s => {
       let count = eventsInSlot(segments, s)
 
       return count === 1

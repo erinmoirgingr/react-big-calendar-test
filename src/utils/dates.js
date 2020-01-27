@@ -1,5 +1,5 @@
 /* eslint no-fallthrough: 0 */
-import dateMath from 'date-arithmetic';
+import * as dateMath from 'date-arithmetic';
 import localizer from '../localizer';
 import { directions } from './constants';
 
@@ -11,7 +11,7 @@ const MILLI = {
 }
 
 
-let dates = Object.assign(dateMath, {
+let dates = Object.assign({...dateMath}, {
 
   monthsInYear(year){
     let months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]

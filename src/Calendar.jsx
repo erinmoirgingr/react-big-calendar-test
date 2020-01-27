@@ -20,10 +20,7 @@ import Toolbar from './Toolbar';
 import EventWrapper from './EventWrapper';
 import BackgroundWrapper from './BackgroundWrapper';
 
-import omit from 'lodash/object/omit';
-import defaults from 'lodash/object/defaults';
-import transform from 'lodash/object/transform';
-import mapValues from 'lodash/object/mapValues';
+import _ from "lodash";
 
 function viewNames(_views){
   return !Array.isArray(_views) ? Object.keys(_views) : _views
@@ -342,11 +339,11 @@ let Calendar = React.createClass({
     const views = this.props.views;
 
     if (Array.isArray(views)) {
-      return transform(views, (obj, name) => obj[name] = VIEWS[name], {});
+      return _.transform(views, (obj, name) => obj[name] = VIEWS[name], {});
     }
 
     if (typeof views === 'object') {
-      return mapValues(views, (value, key) => {
+      return _.mapValues(views, (value, key) => {
         if (value === true) {
           return VIEWS[key];
         }
@@ -380,11 +377,11 @@ let Calendar = React.createClass({
     let View = this.getView();
     let names = viewNames(this.props.views)
 
-    let elementProps = omit(this.props, Object.keys(Calendar.propTypes))
+    let elementProps = _.omit(this.props, Object.keys(Calendar.propTypes))
 
-    let viewComponents = defaults(
+    let viewComponents = _.defaults(
       components[view] || {},
-      omit(components, names),
+      _.omit(components, names),
       {
         eventWrapper: EventWrapper,
         backgroundWrapper: BackgroundWrapper

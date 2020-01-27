@@ -7,9 +7,10 @@ import dates from './utils/dates';
 import { navigate } from './utils/constants';
 import { accessor as get } from './utils/accessors';
 
-import classes from 'dom-helpers/class';
-import getWidth from 'dom-helpers/query/width';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
+import addClass from "dom-helpers/addClass";
+import removeClass from "dom-helpers/removeClass";
+import width from "dom-helpers/width";
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 import { inRange } from './utils/eventLevels';
 
 
@@ -167,8 +168,8 @@ let Agenda = React.createClass({
     let widths = this._widths || []
 
     this._widths = [
-      getWidth(firstRow.children[0]),
-      getWidth(firstRow.children[1])
+      width(firstRow.children[0]),
+      width(firstRow.children[1])
     ]
 
     if (widths[0] !== this._widths[0] || widths[1] !== this._widths[1]) {
@@ -177,11 +178,11 @@ let Agenda = React.createClass({
     }
 
     if (isOverflowing) {
-      classes.addClass(header, 'rbc-header-overflowing')
+      addClass(header, 'rbc-header-overflowing')
       header.style.marginRight = scrollbarSize() + 'px'
     }
     else {
-      classes.removeClass(header, 'rbc-header-overflowing')
+      removeClass(header, 'rbc-header-overflowing')
     }
   }
 });

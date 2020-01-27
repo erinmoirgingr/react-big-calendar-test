@@ -10,8 +10,8 @@ import EventRow from './EventRow';
 import TimeColumn from './TimeColumn';
 import BackgroundCells from './BackgroundCells';
 
-import getWidth from 'dom-helpers/query/width';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
+import width from 'dom-helpers/width';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 import message from './utils/messages';
 
 import { dateFormat} from './utils/propTypes';
@@ -276,7 +276,7 @@ export default class TimeGrid extends Component {
     let gutterCells = this._gutters;
 
     if (!width) {
-      width = Math.max(...gutterCells.map(getWidth));
+      width = Math.max(...gutterCells.map(width));
 
       if (width) {
         this.setState({ gutterWidth: width })

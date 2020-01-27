@@ -2,17 +2,17 @@ import React from 'react';
 import EventCell from './EventCell';
 import { isSelected } from './utils/selection';
 import localizer from './localizer';
-import getOffset from 'dom-helpers/query/offset';
-import getScrollTop from 'dom-helpers/query/scrollTop';
-import getScrollLeft from 'dom-helpers/query/scrollLeft';
+import offset from 'dom-helpers/offset';
+import scrollTop from 'dom-helpers/scrollTop';
+import scrollLeft from 'dom-helpers/scrollLeft';
 
 class Popup extends React.Component {
 
   componentDidMount(){
     let { popupOffset = 5 } = this.props
-      , { top, left, width, height } = getOffset(this.refs.root)
-      , viewBottom = window.innerHeight + getScrollTop(window)
-      , viewRight = window.innerWidth + getScrollLeft(window)
+      , { top, left, width, height } = offset(this.refs.root)
+      , viewBottom = window.innerHeight + scrollTop(window)
+      , viewRight = window.innerWidth + scrollLeft(window)
       , bottom = top + height
       , right = left + width
 

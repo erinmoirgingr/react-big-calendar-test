@@ -4,19 +4,19 @@ import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 import dates from './utils/dates';
 import localizer from './localizer'
-import chunk from 'lodash/array/chunk';
-import omit from 'lodash/object/omit';
+
+import _ from "lodash";
 
 import { navigate } from './utils/constants';
 import { notify } from './utils/helpers';
-import getHeight from 'dom-helpers/query/height';
-import getPosition from 'dom-helpers/query/position';
-import raf from 'dom-helpers/util/requestAnimationFrame';
+import height from 'dom-helpers/height';
+import position from 'dom-helpers/position';
+import { request } from 'dom-helpers/animationFrame';
 
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import Popup from './Popup';
-import Overlay from 'react-overlays/lib/Overlay';
+// import { Overlay } from 'react-overlays';
 import BackgroundCells from './BackgroundCells';
 
 import { dateFormat } from './utils/propTypes';
@@ -90,7 +90,7 @@ let MonthView = React.createClass({
 
     window.addEventListener('resize', this._resizeListener = ()=> {
       if (!running) {
-        raf(()=> {
+        request(()=> {
           running = false
           this.setState({ needLimitMeasure: true }) //eslint-disable-line
         })
@@ -110,13 +110,13 @@ let MonthView = React.createClass({
   render() {
     var { date, culture, weekdayFormat } = this.props
       , month = dates.visibleDays(date, culture)
-      , weeks  = chunk(month, 7);
+      , weeks  = _.chunk(month, 7);
 
     let measure = this.state.needLimitMeasure
 
     this._weekCount = weeks.length;
 
-    var elementProps = omit(this.props, Object.keys(propTypes));
+    var elementProps = _.omit(this.props, Object.keys(propTypes));
 
     return (
       <div
@@ -140,13 +140,13 @@ let MonthView = React.createClass({
 
     evts = _.filter(evts, function(event, i) {
       var p     = '';
-      
+
       if(typeof event.responsible_person !== 'undefined') {
         p = event.responsible_person;
       } else if(typeof event.pk !== 'undefined') {
         p = event.pk;
       }
-      
+
       return p === '' || columnPKs.indexOf(p) > -1;
     })
 
@@ -308,31 +308,32 @@ let MonthView = React.createClass({
     let overlay = (this.state && this.state.overlay) || {};
 
     return (
-      <Overlay
-        rootClose
-        placement='bottom'
-        container={this}
-        show={!!overlay.position}
-        onHide={() => this.setState({ overlay: null })}
-      >
-        <Popup
-          {...this.props}
-          eventComponent={this.props.components.event}
-          eventWrapperComponent={this.props.components.eventWrapper}
-          position={overlay.position}
-          events={overlay.events}
-          slotStart={overlay.date}
-          slotEnd={overlay.end}
-          onSelect={this._selectEvent}
-        />
-      </Overlay>
+      <Popup
+        {...this.props}
+        eventComponent={this.props.components.event}
+        eventWrapperComponent={this.props.components.eventWrapper}
+        position={overlay.position}
+        events={overlay.events}
+        slotStart={overlay.date}
+        slotEnd={overlay.end}
+        onSelect={this._selectEvent}
+      />
+      // <Overlay
+      //   rootClose
+      //   placement='bottom'
+      //   container={this}
+      //   show={!!overlay.position}
+      //   onHide={() => this.setState({ overlay: null })}
+      // >
+      //
+      // </Overlay>
     )
   },
 
   _measureRowLimit() {
-    let eventHeight = getHeight(this._measureEvent);
-    let labelHeight = getHeight(this._firstDateRow);
-    let eventSpace = getHeight(this._firstRow) - labelHeight;
+    let eventHeight = height(this._measureEvent);
+    let labelHeight = height(this._firstDateRow);
+    let eventSpace = height(this._firstRow) - labelHeight;
 
     this._needLimitMeasure = false;
 
@@ -381,7 +382,7 @@ let MonthView = React.createClass({
     this.clearSelection()
 
     if (this.props.popup) {
-      let position = getPosition(cell, findDOMNode(this));
+      let position = position(cell, findDOMNode(this));
 
       this.setState({
         overlay: { date, events, position }

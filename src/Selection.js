@@ -1,10 +1,9 @@
-import contains from 'dom-helpers/query/contains';
-import events from 'dom-helpers/events';
+import contains from 'dom-helpers/contains';
 
 function addEventListener(type, handler) {
-  events.on(document, type, handler)
-  return {
-    remove(){ events.off(document, type, handler) }
+  document.addEventListener(type, handler);
+  return () => {
+    document.removeEventListener(type, handler);
   }
 }
 

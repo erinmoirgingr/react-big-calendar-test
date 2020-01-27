@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
+import PropTypes, { elementType } from 'prop-types';
 import localizer from '../localizer';
-import elementType from 'react-prop-types/lib/elementType';
 import all from 'react-prop-types/lib/all';
 import { views as Views } from './constants';
-import {createChainableTypeChecker} from 'react-prop-types/lib/common';
+// import {createChainableTypeChecker} from 'react-prop-types/lib/common';
 
 export { elementType }
 
@@ -25,8 +24,8 @@ export let accessor = PropTypes.oneOfType([
   PropTypes.func
 ])
 
-export let dateFormat = createChainableTypeChecker(
-    (...args) => localizer.propType && localizer.propType(...args))
+// export let dateFormat = createChainableTypeChecker(
+//     (...args) => localizer.propType && localizer.propType(...args))
 
 
 export let views = PropTypes.oneOfType([

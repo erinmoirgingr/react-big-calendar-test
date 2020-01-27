@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import EventCell from './EventCell';
-import getHeight from 'dom-helpers/query/height';
+import height from 'dom-helpers/height';
 import { accessor, elementType } from './utils/propTypes';
 import { segStyle } from './utils/eventLevels';
 import { isSelected } from './utils/selection';
@@ -70,6 +70,6 @@ export default {
   },
 
   getRowHeight(){
-    getHeight(findDOMNode(this))
+    height(findDOMNode(this))
   }
 }
