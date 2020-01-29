@@ -5,14 +5,7 @@ import { navigate } from './utils/constants';
 
 import TimeGrid from './TimeGrid';
 
-let Week = React.createClass({
-
-  propTypes: TimeGrid.propTypes,
-
-  getDefaultProps() {
-    return TimeGrid.defaultProps
-  },
-
+class Week extends React.Component {
   render() {
     let { date } = this.props
     let { start, end } = Week.range(date, this.props)
@@ -22,7 +15,10 @@ let Week = React.createClass({
     );
   }
 
-});
+};
+
+Week.propTypes = TimeGrid.propTypes;
+Week.defaultProps = TimeGrid.defaultProps;
 
 Week.navigate = (date, action)=>{
   switch (action){

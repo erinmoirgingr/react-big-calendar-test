@@ -58,29 +58,26 @@ let propTypes = {
 };
 
 
-let MonthView = React.createClass({
+class MonthView extends React.Component {
 
-  displayName: 'MonthView',
-
-  propTypes,
-
-  getInitialState(){
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       rowLimit: 5,
       needLimitMeasure: true
     }
-  },
+  }
 
   componentWillMount() {
     this._bgRows = []
     this._pendingSelection = []
-  },
+  }
 
   componentWillReceiveProps({ date }) {
     this.setState({
       needLimitMeasure: !dates.eq(date, this.props.date)
     })
-  },
+  }
 
   componentDidMount() {
     let running;
@@ -96,16 +93,16 @@ let MonthView = React.createClass({
         })
       }
     }, false)
-  },
+  }
 
   componentDidUpdate() {
     if (this.state.needLimitMeasure)
       this._measureRowLimit(this.props)
-  },
+  }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._resizeListener, false)
-  },
+  }
 
   render() {
     var { date, culture, weekdayFormat } = this.props
@@ -131,7 +128,7 @@ let MonthView = React.createClass({
         }
       </div>
     )
-  },
+  }
 
   renderWeek(week, weekIdx, content) {
     let { first, last } = endOfRange(week);
@@ -189,7 +186,7 @@ let MonthView = React.createClass({
         }
       </div>
     )
-  },
+  }
 
   renderBackground(row, idx){
     let self = this;
@@ -214,7 +211,7 @@ let MonthView = React.createClass({
       onSelectSlot={onSelectSlot}
     />
     )
-  },
+  }
 
   renderRowLevel(segments, week, idx){
     let { first, last } = endOfRange(week);
@@ -231,7 +228,7 @@ let MonthView = React.createClass({
         end={last}
       />
     )
-  },
+  }
 
   renderShowMore(segments, extraSegments, week, weekIdx) {
     let { first, last } = endOfRange(week);
@@ -251,7 +248,7 @@ let MonthView = React.createClass({
         end={last}
       />
     )
-  },
+  }
 
   _dates(row){
     return row.map((day, colIdx) => {
@@ -273,7 +270,7 @@ let MonthView = React.createClass({
         </div>
       )
     })
-  },
+  }
 
   _headers(row, format, culture){
     let first = row[0]
@@ -288,7 +285,7 @@ let MonthView = React.createClass({
         { localizer.format(day, format, culture) }
       </div>
     )
-  },
+  }
 
   _renderMeasureRows(levels, row, idx) {
     let first = idx === 0;
@@ -302,7 +299,7 @@ let MonthView = React.createClass({
         </div>
       </div>
     ) : <span/>
-  },
+  }
 
   _renderOverlay(){
     let overlay = (this.state && this.state.overlay) || {};
@@ -328,7 +325,7 @@ let MonthView = React.createClass({
       //
       // </Overlay>
     )
-  },
+  }
 
   _measureRowLimit() {
     let eventHeight = height(this._measureEvent);
@@ -342,20 +339,20 @@ let MonthView = React.createClass({
       rowLimit: Math.max(
         Math.floor(eventSpace / eventHeight), 1)
     })
-  },
+  }
 
   _dateClick(date, e){
     e.preventDefault();
     this.clearSelection()
     notify(this.props.onNavigate, [navigate.DATE, date])
-  },
+  }
 
   _selectEvent(...args){
     //cancel any pending selections so only the event click goes through.
     this.clearSelection()
 
     notify(this.props.onSelectEvent, args)
-  },
+  }
 
   _selectDates(){
     let slots = this._pendingSelection.slice()
@@ -369,7 +366,7 @@ let MonthView = React.createClass({
       start: slots[0],
       end: slots[slots.length - 1]
     })
-  },
+  }
 
   _showMore(segments, date, weekIdx, slot){
     let cell = findDOMNode(this._bgRows[weekIdx]).children[slot - 1];
@@ -393,14 +390,17 @@ let MonthView = React.createClass({
     }
 
     notify(this.props.onShowMore, [events, date, slot])
-  },
+  }
 
   clearSelection(){
     clearTimeout(this._selectTimer)
     this._pendingSelection = [];
   }
 
-});
+};
+
+MonthView.propTypes = propTypes;
+MonthView.displayName = 'MonthView';
 
 MonthView.navigate = (date, action)=>{
   switch (action){

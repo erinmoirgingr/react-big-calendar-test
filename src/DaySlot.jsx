@@ -37,45 +37,30 @@ function overlaps(event, events, { startAccessor, endAccessor }, last) {
   return offset
 }
 
-let DaySlot = React.createClass({
+class DaySlot extends React.Component {
 
-  propTypes: {
-    events: PropTypes.array.isRequired,
-    step: PropTypes.number.isRequired,
-    min: PropTypes.instanceOf(Date).isRequired,
-    max: PropTypes.instanceOf(Date).isRequired,
-
-    allDayAccessor: accessor.isRequired,
-    startAccessor: accessor.isRequired,
-    endAccessor: accessor.isRequired,
-
-    selectable: PropTypes.bool,
-    eventOffset: PropTypes.number,
-
-    onSelectSlot: PropTypes.func.isRequired,
-    onSelectEvent: PropTypes.func.isRequired
-  },
-
-  getInitialState() {
-    return { selecting: false };
-  },
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      selecting: false,
+    }
+  }
 
   componentDidMount() {
     this.props.selectable
       && this._selectable()
-  },
+  }
 
   componentWillUnmount() {
     this._teardownSelectable();
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectable && !this.props.selectable)
       this._selectable();
     if (!nextProps.selectable && this.props.selectable)
       this._teardownSelectable();
-  },
+  }
 
   render() {
     let {
@@ -116,7 +101,7 @@ let DaySlot = React.createClass({
         }
       </div>
     );
-  },
+  }
 
   renderEvents(numSlots, totalMin) {
     let {
@@ -168,7 +153,7 @@ let DaySlot = React.createClass({
         </div>
       )
     })
-  },
+  }
 
   _slotStyle(startSlot, endSlot, leftOffset){
 
@@ -188,7 +173,7 @@ let DaySlot = React.createClass({
       [isRtl ? 'right' : 'left']: per + '%',
       width: (leftOffset === 0 ? (100 - eventOffset) : (100 - per) - rightDiff) + '%'
     }
-  },
+  }
 
   _selectable(){
     let node = findDOMNode(this);
@@ -246,13 +231,13 @@ let DaySlot = React.createClass({
         this._selectSlot(this.state)
         this.setState({ selecting: false })
       })
-  },
+  }
 
   _teardownSelectable() {
     if (!this._selector) return
     this._selector.teardown();
     this._selector = null;
-  },
+  }
 
   _selectSlot({ startDate, endDate, endSlot, startSlot }) {
     let current = startDate
@@ -268,13 +253,30 @@ let DaySlot = React.createClass({
       start: startDate,
       end: endDate
     })
-  },
+  }
 
   _select(event){
     clearTimeout(this._clickTimer);
     notify(this.props.onSelectEvent, event)
   }
-});
+};
+
+DaySlot.propTypes = {
+  events: PropTypes.array.isRequired,
+  step: PropTypes.number.isRequired,
+  min: PropTypes.instanceOf(Date).isRequired,
+  max: PropTypes.instanceOf(Date).isRequired,
+
+  allDayAccessor: accessor.isRequired,
+  startAccessor: accessor.isRequired,
+  endAccessor: accessor.isRequired,
+
+  selectable: PropTypes.bool,
+  eventOffset: PropTypes.number,
+
+  onSelectSlot: PropTypes.func.isRequired,
+  onSelectEvent: PropTypes.func.isRequired
+}
 
 
 function minToDate(min, date){

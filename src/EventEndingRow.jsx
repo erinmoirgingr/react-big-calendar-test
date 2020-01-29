@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import EventRowMixin from './EventRowMixin';
+import wrapComponent from './EventRowMixin';
 import { eventLevels } from './utils/eventLevels';
 import message from './utils/messages';
 import _ from "lodash";
@@ -8,17 +8,7 @@ import _ from "lodash";
 let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot;
 let eventsInSlot = (segments, slot) => segments.filter(seg => isSegmentInSlot(seg, slot)).length
 
-let EventRow = React.createClass({
-
-  displayName: 'EventRow',
-
-  propTypes: {
-    segments: PropTypes.array,
-    slots: PropTypes.number
-  },
-
-  mixins: [ EventRowMixin ],
-
+class EventRow extends React.Component {
   render(){
     let { segments, slots: slotCount } = this.props;
     let rowSegments = eventLevels(segments).levels[0];
@@ -66,7 +56,7 @@ let EventRow = React.createClass({
         { row }
       </div>
     )
-  },
+  }
 
   canRenderSlotEvent(slot, span){
     let { segments } = this.props;
@@ -76,7 +66,7 @@ let EventRow = React.createClass({
 
       return count === 1
     })
-  },
+  }
 
   renderShowMore(segments, slot) {
     let messages = message(this.props.messages)
@@ -93,12 +83,18 @@ let EventRow = React.createClass({
           {messages.showMore(count)}
         </a>
       ) : false
-  },
+  }
 
   _showMore(slot, e){
     e.preventDefault()
     this.props.onShowMore(slot)
   }
-});
+}
 
-export default EventRow
+EventRow.displayName = 'EventRow';
+EventRow.propTypes = {
+  segments: PropTypes.array,
+  slots: PropTypes.number
+}
+
+export default wrapComponent(EventRow);

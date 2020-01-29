@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import uncontrollable from 'uncontrollable';
+import { uncontrollable } from 'uncontrollable';
 import cn from 'classnames';
 import {
     accessor
@@ -50,275 +50,8 @@ let now = new Date();
  * on `Apr 8th 12:01:00 am` will. If you want _inclusive_ ranges consider providing a
  * function `endAccessor` that returns the end date + 1 day for those events that end at midnight.
  */
-let Calendar = React.createClass({
 
-  propTypes: {
-    /**
-     * The current date value of the calendar. Determines the visible view range
-     *
-     * @controllable onNavigate
-     */
-    date: PropTypes.instanceOf(Date),
-
-    /**
-     * The current view of the calendar.
-     *
-     * @default 'month'
-     * @controllable onView
-     */
-    view: PropTypes.string,
-
-    /**
-     * An array of event objects to display on the calendar
-     */
-    events: PropTypes.arrayOf(PropTypes.object),
-
-    /**
-     * Callback fired when the `date` value changes.
-     *
-     * @controllable date
-     */
-    onNavigate: PropTypes.func,
-
-    /**
-     * Callback fired when the `view` value changes.
-     *
-     * @controllable date
-     */
-    onView: PropTypes.func,
-
-    /**
-     * A callback fired when a date selection is made. Only fires when `selectable` is `true`.
-     *
-     * ```js
-     * function(
-     *   slotInfo: object {
-     *     start: date,
-     *     end: date,
-     *     slots: array<date>
-     *   }
-     * )
-     * ```
-     */
-    onSelectSlot: PropTypes.func,
-
-    /**
-     * Callback fired when a calendar event is selected.
-     *
-     * ```js
-     * function(event: object)
-     * ```
-     */
-    onSelectEvent: PropTypes.func,
-
-    /**
-     * Callback fired when dragging a selection in the Time views.
-     *
-     * Returning `false` from the handler will prevent a selection.
-     *
-     * ```js
-     * function ({ start: Date, end: Date }) : boolean
-     * ```
-     */
-    onSelecting: PropTypes.func,
-
-    /**
-     * An array of built-in view names to allow the calendar to display.
-     *
-     * @type Calendar.views
-     * @default ['month', 'week', 'day', 'agenda']
-     */
-    views: componentViews,
-
-    /**
-     * Determines whether the toolbar is displayed
-     */
-    toolbar: PropTypes.bool,
-
-    /**
-     * Show truncated events in an overlay when you click the "+_x_ more" link.
-     */
-    popup: PropTypes.bool,
-
-    /**
-     * Distance in pixels, from the edges of the viewport, the "show more" overlay should be positioned.
-     *
-     * ```js
-     * <BigCalendar popupOffset={30}/>
-     * <BigCalendar popupOffset={{x: 30, y: 20}}/>
-     * ```
-     */
-    popupOffset: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({ x: PropTypes.number, y: PropTypes.number })
-    ]),
-    /**
-     * Allows mouse selection of ranges of dates/times.
-     */
-    selectable: PropTypes.bool,
-
-    /**
-     * Determines the selectable time increments in week and day views
-     */
-    step: PropTypes.number,
-
-    /**
-     * switch the calendar to a `right-to-left` read direction.
-     */
-    rtl: PropTypes.bool,
-
-    /**
-     * Optionally provide a function that returns an object of className or style props
-     * to be applied to the the event node.
-     *
-     * ```js
-     * function(
-     * 	event: object,
-     * 	start: date,
-     * 	end: date,
-     * 	isSelected: bool
-     * ) -> { className: string?, style: object? }
-     * ```
-     */
-    eventPropGetter: PropTypes.func,
-
-    /**
-     * Accessor for the event title, used to display event information. Should
-     * resolve to a `renderable` value.
-     *
-     * @type {(func|string)}
-     */
-    titleAccessor: accessor,
-
-    /**
-     * Determines whether the event should be considered an "all day" event and ignore time.
-     * Must resolve to a `boolean` value.
-     *
-     * @type {(func|string)}
-     */
-    allDayAccessor: accessor,
-
-    /**
-     * The start date/time of the event. Must resolve to a JavaScript `Date` object.
-     *
-     * @type {(func|string)}
-     */
-    startAccessor: accessor,
-
-    /**
-     * The end date/time of the event. Must resolve to a JavaScript `Date` object.
-     *
-     * @type {(func|string)}
-     */
-    endAccessor: accessor,
-
-    /**
-     * Constrains the minimum _time_ of the Day and Week views.
-     */
-    min: PropTypes.instanceOf(Date),
-
-    /**
-     * Constrains the maximum _time_ of the Day and Week views..
-     */
-    max: PropTypes.instanceOf(Date),
-
-    /**
-     * Localizer specific formats, tell the Calendar how to format and display dates.
-     */
-    formats: PropTypes.shape({
-      /**
-       * Format for the day of the month heading in the Month view.
-       */
-      dateFormat,
-
-      /**
-       * A day of the week format for Week and Day headings
-       */
-      dayFormat: dateFormat,
-      /**
-       * Week day name format for the Month week day headings.
-       */
-      weekdayFormat: dateFormat,
-
-      /**
-       * Toolbar header format for the Month view.
-       */
-      monthHeaderFormat: dateFormat,
-      /**
-       * Toolbar header format for the Week views.
-       */
-      weekHeaderFormat: dateFormat,
-      /**
-       * Toolbar header format for the Day view.
-       */
-      dayHeaderFormat: dateFormat,
-
-      /**
-       * Toolbar header format for the Agenda view.
-       */
-      agendaHeaderFormat: dateFormat,
-
-      /**
-       * A time range format for selecting time slots.
-       */
-      selectRangeFormat: dateFormat,
-
-
-      agendaDateFormat: dateFormat,
-      agendaTimeFormat: dateFormat,
-      agendaTimeRangeFormat: dateFormat
-    }),
-
-    /**
-     * Customize how different sections of the calendar render by providing custom Components.
-     * In particular the `Event` component can be specified for the entire calendar, or you can
-     * provide an individual component for each view type.
-     *
-     * ```jsx
-     * let components = {
-     *   event: MyEvent, // used by each view (Month, Day, Week)
-     *   toolbar: MyToolbar,
-     *   agenda: {
-     *   	 event: MyAgendaEvent // with the agenda view use a different component to render events
-     *   }
-     * }
-     * <Calendar components={components} />
-     * ```
-     */
-    components: PropTypes.shape({
-      event: elementType,
-      eventWrapper: elementType,
-      backgroundWrapper: elementType,
-
-      toolbar: elementType,
-
-      agenda: PropTypes.shape({
-        date: elementType,
-        time: elementType,
-        event: elementType
-      }),
-
-      day: PropTypes.shape({ event: elementType }),
-      week: PropTypes.shape({ event: elementType }),
-      month: PropTypes.shape({ event: elementType })
-    }),
-
-    /**
-     * String messages used throughout the component, override to provide localizations
-     */
-    messages: PropTypes.shape({
-      allDay: PropTypes.node,
-      previous: PropTypes.node,
-      next: PropTypes.node,
-      today: PropTypes.node,
-      month: PropTypes.node,
-      week: PropTypes.node,
-      day: PropTypes.node,
-      agenda: PropTypes.node,
-      showMore: PropTypes.func
-    })
-  },
-
+class Calendar extends React.Component {
   getDefaultProps() {
     return {
       popup: false,
@@ -333,7 +66,7 @@ let Calendar = React.createClass({
       startAccessor: 'start',
       endAccessor: 'end'
     };
-  },
+  }
 
   getViews() {
     const views = this.props.views;
@@ -353,13 +86,13 @@ let Calendar = React.createClass({
     }
 
     return VIEWS;
-  },
+  }
 
   getView() {
     const views = this.getViews();
 
     return views[this.props.view];
-  },
+  }
 
   render() {
     let {
@@ -409,7 +142,6 @@ let Calendar = React.createClass({
           />
         }
         <View
-          ref='view'
           {...props}
           {...formats}
           culture={culture}
@@ -426,7 +158,7 @@ let Calendar = React.createClass({
         />
       </div>
     );
-  },
+  }
 
   _navigate(action, newDate) {
     let { view, date, onNavigate } = this.props;
@@ -437,7 +169,7 @@ let Calendar = React.createClass({
 
     if (action === navigate.DATE)
       this._viewNavigate(date)
-  },
+  }
 
   _viewNavigate(nextDate){
     let { view, date, culture } = this.props;
@@ -445,20 +177,20 @@ let Calendar = React.createClass({
     if (dates.eq(date, nextDate, view, localizer.startOfWeek(culture))) {
       this._view(views.DAY)
     }
-  },
+  }
 
   _view(view){
     if (view !== this.props.view && isValidView(view, this.props))
       this.props.onView(view)
-  },
+  }
 
   _select(event){
     notify(this.props.onSelectEvent, event)
-  },
+  }
 
   _selectSlot(slotInfo){
     notify(this.props.onSelectSlot, slotInfo)
-  },
+  }
 
   _headerClick(date){
     let { view } = this.props;
@@ -468,7 +200,274 @@ let Calendar = React.createClass({
 
     this._navigate(navigate.DATE, date)
   }
-});
+}
+
+Calendar.propTypes = {
+  /**
+   * The current date value of the calendar. Determines the visible view range
+   *
+   * @controllable onNavigate
+   */
+  date: PropTypes.instanceOf(Date),
+
+  /**
+   * The current view of the calendar.
+   *
+   * @default 'month'
+   * @controllable onView
+   */
+  view: PropTypes.string,
+
+  /**
+   * An array of event objects to display on the calendar
+   */
+  events: PropTypes.arrayOf(PropTypes.object),
+
+  /**
+   * Callback fired when the `date` value changes.
+   *
+   * @controllable date
+   */
+  onNavigate: PropTypes.func,
+
+  /**
+   * Callback fired when the `view` value changes.
+   *
+   * @controllable date
+   */
+  onView: PropTypes.func,
+
+  /**
+   * A callback fired when a date selection is made. Only fires when `selectable` is `true`.
+   *
+   * ```js
+   * function(
+   *   slotInfo: object {
+   *     start: date,
+   *     end: date,
+   *     slots: array<date>
+   *   }
+   * )
+   * ```
+   */
+  onSelectSlot: PropTypes.func,
+
+  /**
+   * Callback fired when a calendar event is selected.
+   *
+   * ```js
+   * function(event: object)
+   * ```
+   */
+  onSelectEvent: PropTypes.func,
+
+  /**
+   * Callback fired when dragging a selection in the Time views.
+   *
+   * Returning `false` from the handler will prevent a selection.
+   *
+   * ```js
+   * function ({ start: Date, end: Date }) : boolean
+   * ```
+   */
+  onSelecting: PropTypes.func,
+
+  /**
+   * An array of built-in view names to allow the calendar to display.
+   *
+   * @type Calendar.views
+   * @default ['month', 'week', 'day', 'agenda']
+   */
+  views: componentViews,
+
+  /**
+   * Determines whether the toolbar is displayed
+   */
+  toolbar: PropTypes.bool,
+
+  /**
+   * Show truncated events in an overlay when you click the "+_x_ more" link.
+   */
+  popup: PropTypes.bool,
+
+  /**
+   * Distance in pixels, from the edges of the viewport, the "show more" overlay should be positioned.
+   *
+   * ```js
+   * <BigCalendar popupOffset={30}/>
+   * <BigCalendar popupOffset={{x: 30, y: 20}}/>
+   * ```
+   */
+  popupOffset: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({ x: PropTypes.number, y: PropTypes.number })
+  ]),
+  /**
+   * Allows mouse selection of ranges of dates/times.
+   */
+  selectable: PropTypes.bool,
+
+  /**
+   * Determines the selectable time increments in week and day views
+   */
+  step: PropTypes.number,
+
+  /**
+   * switch the calendar to a `right-to-left` read direction.
+   */
+  rtl: PropTypes.bool,
+
+  /**
+   * Optionally provide a function that returns an object of className or style props
+   * to be applied to the the event node.
+   *
+   * ```js
+   * function(
+   * 	event: object,
+   * 	start: date,
+   * 	end: date,
+   * 	isSelected: bool
+   * ) -> { className: string?, style: object? }
+   * ```
+   */
+  eventPropGetter: PropTypes.func,
+
+  /**
+   * Accessor for the event title, used to display event information. Should
+   * resolve to a `renderable` value.
+   *
+   * @type {(func|string)}
+   */
+  titleAccessor: accessor,
+
+  /**
+   * Determines whether the event should be considered an "all day" event and ignore time.
+   * Must resolve to a `boolean` value.
+   *
+   * @type {(func|string)}
+   */
+  allDayAccessor: accessor,
+
+  /**
+   * The start date/time of the event. Must resolve to a JavaScript `Date` object.
+   *
+   * @type {(func|string)}
+   */
+  startAccessor: accessor,
+
+  /**
+   * The end date/time of the event. Must resolve to a JavaScript `Date` object.
+   *
+   * @type {(func|string)}
+   */
+  endAccessor: accessor,
+
+  /**
+   * Constrains the minimum _time_ of the Day and Week views.
+   */
+  min: PropTypes.instanceOf(Date),
+
+  /**
+   * Constrains the maximum _time_ of the Day and Week views..
+   */
+  max: PropTypes.instanceOf(Date),
+
+  /**
+   * Localizer specific formats, tell the Calendar how to format and display dates.
+   */
+  formats: PropTypes.shape({
+    /**
+     * Format for the day of the month heading in the Month view.
+     */
+    dateFormat,
+
+    /**
+     * A day of the week format for Week and Day headings
+     */
+    dayFormat: dateFormat,
+    /**
+     * Week day name format for the Month week day headings.
+     */
+    weekdayFormat: dateFormat,
+
+    /**
+     * Toolbar header format for the Month view.
+     */
+    monthHeaderFormat: dateFormat,
+    /**
+     * Toolbar header format for the Week views.
+     */
+    weekHeaderFormat: dateFormat,
+    /**
+     * Toolbar header format for the Day view.
+     */
+    dayHeaderFormat: dateFormat,
+
+    /**
+     * Toolbar header format for the Agenda view.
+     */
+    agendaHeaderFormat: dateFormat,
+
+    /**
+     * A time range format for selecting time slots.
+     */
+    selectRangeFormat: dateFormat,
+
+
+    agendaDateFormat: dateFormat,
+    agendaTimeFormat: dateFormat,
+    agendaTimeRangeFormat: dateFormat
+  }),
+
+  /**
+   * Customize how different sections of the calendar render by providing custom Components.
+   * In particular the `Event` component can be specified for the entire calendar, or you can
+   * provide an individual component for each view type.
+   *
+   * ```jsx
+   * let components = {
+   *   event: MyEvent, // used by each view (Month, Day, Week)
+   *   toolbar: MyToolbar,
+   *   agenda: {
+   *   	 event: MyAgendaEvent // with the agenda view use a different component to render events
+   *   }
+   * }
+   * <Calendar components={components} />
+   * ```
+   */
+  components: PropTypes.shape({
+    event: elementType,
+    eventWrapper: elementType,
+    backgroundWrapper: elementType,
+
+    toolbar: elementType,
+
+    agenda: PropTypes.shape({
+      date: elementType,
+      time: elementType,
+      event: elementType
+    }),
+
+    day: PropTypes.shape({ event: elementType }),
+    week: PropTypes.shape({ event: elementType }),
+    month: PropTypes.shape({ event: elementType })
+  }),
+
+  /**
+   * String messages used throughout the component, override to provide localizations
+   */
+  messages: PropTypes.shape({
+    allDay: PropTypes.node,
+    previous: PropTypes.node,
+    next: PropTypes.node,
+    today: PropTypes.node,
+    month: PropTypes.node,
+    week: PropTypes.node,
+    day: PropTypes.node,
+    agenda: PropTypes.node,
+    showMore: PropTypes.func
+  })
+};
 
 export default uncontrollable(Calendar, {
   view: 'onView',

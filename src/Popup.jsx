@@ -8,6 +8,13 @@ import scrollLeft from 'dom-helpers/scrollLeft';
 
 class Popup extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.refElems = {
+      root: React.createRef(),
+    }
+  }
+
   componentDidMount(){
     let { popupOffset = 5 } = this.props
       , { top, left, width, height } = offset(this.refs.root)
@@ -42,7 +49,7 @@ class Popup extends React.Component {
     }
 
     return (
-      <div ref='root' style={style} className='rbc-overlay'>
+      <div ref={this.refElems.root} style={style} className='rbc-overlay'>
         <div className='rbc-overlay-header'>
           { localizer.format(props.slotStart, props.dayHeaderFormat, props.culture) }
         </div>

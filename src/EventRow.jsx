@@ -1,18 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import EventRowMixin from './EventRowMixin';
+import wrapComponent from "./EventRowMixin";
 
-
-let EventRow = React.createClass({
-
-  displayName: 'EventRow',
-
-  propTypes: {
-    segments: PropTypes.array
-  },
-
-  mixins: [EventRowMixin],
-
+class EventRow extends React.Component {
   render(){
     let { segments, columnPKs } = this.props;
 
@@ -25,13 +15,13 @@ let EventRow = React.createClass({
           let key = '_lvl_' + li;
           let gap = left - lastEnd;
 
-          let content = this.renderEvent(event)
+          let content = this.props.renderEvent(event)
 
           if (gap)
-            row.push(this.renderSpan(gap, key + '_gap'))
+            row.push(this.props.renderSpan(gap, key + '_gap'))
 
           row.push(
-            this.renderSpan(span, key, content)
+            this.props.renderSpan(span, key, content)
           )
 
           lastEnd = (right + 1);
@@ -42,6 +32,12 @@ let EventRow = React.createClass({
       </div>
     )
   }
-});
+}
 
-export default EventRow
+EventRow.propTypes = {
+  segments: PropTypes.array
+}
+
+EventRow.displayName = 'EventRow';
+
+export default wrapComponent(EventRow);

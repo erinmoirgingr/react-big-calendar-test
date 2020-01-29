@@ -13,30 +13,24 @@ import width from "dom-helpers/width";
 import scrollbarSize from 'dom-helpers/scrollbarSize';
 import { inRange } from './utils/eventLevels';
 
+class Agenda extends React.Component {
 
-let Agenda = React.createClass({
-
-  propTypes: {
-    messages: PropTypes.shape({
-      date: PropTypes.string,
-      time: PropTypes.string,
-      event: PropTypes.string
-    })
-  },
-
-  getDefaultProps() {
-    return {
-      length: 30
-    };
-  },
+  constructor(props) {
+    super(props);
+    const fields = [
+      "header", "dateCol", "timeCol", "content", "tbody"
+    ];
+    this.refElems = {};
+    fields.forEach(field => this.refElems[field] = React.createRef());
+  }
 
   componentDidMount() {
     this._adjustHeader()
-  },
+  }
 
   componentDidUpdate() {
     this._adjustHeader()
-  },
+  }
 
   render() {
     let { length, date, events, startAccessor } = this.props;
@@ -53,13 +47,13 @@ let Agenda = React.createClass({
 
     return (
       <div className='rbc-agenda-view'>
-        <table ref='header'>
+        <table ref={this.refElems.header}>
           <thead>
             <tr>
-              <th className='rbc-header' ref='dateCol'>
+              <th className='rbc-header' ref={this.refElems.dateCol}>
                 {messages.date}
               </th>
-              <th className='rbc-header' ref='timeCol'>
+              <th className='rbc-header' ref={this.refElems.timeCol}>
                 {messages.time}
               </th>
               <th className='rbc-header'>
@@ -68,16 +62,16 @@ let Agenda = React.createClass({
             </tr>
           </thead>
         </table>
-        <div className='rbc-agenda-content' ref='content'>
+        <div className='rbc-agenda-content' ref={this.refElems.content}>
           <table>
-            <tbody ref='tbody'>
+            <tbody ref={this.refElems.tbody}>
               { range.map((day, idx) => this.renderDay(day, events, idx)) }
             </tbody>
           </table>
         </div>
       </div>
     );
-  },
+  }
 
   renderDay(day, events, dayKey){
     let {
@@ -118,7 +112,7 @@ let Agenda = React.createClass({
         </tr>
       )
     }, [])
-  },
+  }
 
   timeRangeLabel(day, event){
     let {
@@ -155,16 +149,16 @@ let Agenda = React.createClass({
         }
       </span>
     )
-  },
+  }
 
   _adjustHeader() {
-    let header = this.refs.header;
-    let firstRow = this.refs.tbody.firstChild
+    let header = this.refElems.header.current;
+    let firstRow = this.refElems.tbody.current.firstChild
 
     if (!firstRow)
       return
 
-    let isOverflowing = this.refs.content.scrollHeight > this.refs.content.clientHeight;
+    let isOverflowing = this.refElems.content.current.scrollHeight > this.refElems.content.current.clientHeight;
     let widths = this._widths || []
 
     this._widths = [
@@ -173,8 +167,8 @@ let Agenda = React.createClass({
     ]
 
     if (widths[0] !== this._widths[0] || widths[1] !== this._widths[1]) {
-      this.refs.dateCol.style.width = this._widths[0] + 'px'
-      this.refs.timeCol.style.width = this._widths[1] + 'px';
+      this.refElems.dateCol.current.style.width = this._widths[0] + 'px'
+      this.refElems.timeCol.current.style.width = this._widths[1] + 'px';
     }
 
     if (isOverflowing) {
@@ -185,7 +179,20 @@ let Agenda = React.createClass({
       removeClass(header, 'rbc-header-overflowing')
     }
   }
-});
+
+}
+
+Agenda.propTypes = {
+  messages: PropTypes.shape({
+    date: PropTypes.string,
+    time: PropTypes.string,
+    event: PropTypes.string
+  })
+}
+
+Agenda.defaultProps = {
+  length: 30
+}
 
 Agenda.navigate = (date, action)=>{
   switch (action){

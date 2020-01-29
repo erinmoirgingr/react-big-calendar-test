@@ -3,7 +3,7 @@ import cn from 'classnames';
 import dates from './utils/dates';
 import { accessor as get } from './utils/accessors';
 
-let EventCell = React.createClass({
+class EventCell extends React.Component {
   render() {
     let {
         className, event, selected, eventPropGetter
@@ -51,6 +51,6 @@ let EventCell = React.createClass({
       </EventWrapper>
     );
   }
-});
+}
 
 export default EventCell

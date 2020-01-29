@@ -3,13 +3,8 @@ import dates from './utils/dates';
 import TimeGrid from './TimeGrid';
 import { navigate } from './utils/constants';
 
-let Day = React.createClass({
 
-  propTypes: TimeGrid.propTypes,
-
-  getDefaultProps() {
-    return TimeGrid.defaultProps
-  },
+class Day extends React.Component {
 
   render() {
     let { date } = this.props;
@@ -19,7 +14,11 @@ let Day = React.createClass({
       <TimeGrid {...this.props} start={start} end={end} eventOffset={10}/>
     );
   }
-});
+};
+
+Day.propTypes = TimeGrid.propTypes;
+
+Day.defaultProps = TimeGrid.defaultProps;
 
 Day.navigate = (date, action)=>{
   switch (action){

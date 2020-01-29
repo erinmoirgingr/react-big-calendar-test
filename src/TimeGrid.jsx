@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import cn from 'classnames';
 import { findDOMNode } from 'react-dom';
 import dates from './utils/dates';
@@ -56,13 +56,17 @@ export default class TimeGrid extends Component {
 
   constructor(props) {
     super(props)
+    alert(React.version);
     this.state = { gutterWidth: undefined, isOverflowing: null };
     this._selectEvent = this._selectEvent.bind(this)
     this._headerClick = this._headerClick.bind(this)
-  }
-
-  componentWillMount() {
     this._gutters = [];
+
+    this.refElems = {
+      content: createRef(),
+      allDay: createRef(),
+      headerCell: createRef(),
+    }
   }
 
   componentDidMount() {
@@ -125,7 +129,7 @@ export default class TimeGrid extends Component {
         {
           this.renderHeader(range, segments, width)
         }
-        <div ref='content' className='rbc-time-content'>
+        <div ref={this.refElems.content} className='rbc-time-content'>
           <TimeColumn
             {...this.props}
             showLabels
@@ -206,7 +210,7 @@ export default class TimeGrid extends Component {
 
     return (
       <div
-        ref='headerCell'
+        ref={this.refElems.headerCell}
         className={cn(
           'rbc-time-header',
           isOverflowing && 'rbc-overflowing'
@@ -228,13 +232,13 @@ export default class TimeGrid extends Component {
           >
             { message(messages).allDay }
           </div>
-          <div ref='allDay' className='rbc-allday-cell'>
+          <div ref={this.refElems.allDay} className='rbc-allday-cell'>
             <BackgroundCells
               backgroundWrapperComponent={this.props.components.backgroundWrapper}
               slots={range.length}
               values={range}
               type="AllDay"
-              container={()=> this.refs.allDay}
+              container={()=> this.refElems.allDay.current}
               selectable={this.props.selectable}
             />
             <div className='rbc-allday-events'>
@@ -276,7 +280,7 @@ export default class TimeGrid extends Component {
     let gutterCells = this._gutters;
 
     if (!width) {
-      width = Math.max(...gutterCells.map(width));
+      width = Math.max(...gutterCells.map(node => node.clientWidth));
 
       if (width) {
         this.setState({ gutterWidth: width })
@@ -287,7 +291,7 @@ export default class TimeGrid extends Component {
   checkOverflow() {
     if (this._updatingOverflow) return;
 
-    let isOverflowing = this.refs.content.scrollHeight > this.refs.content.clientHeight;
+    let isOverflowing = this.refElems.content.current.scrollHeight > this.refElems.content.current.clientHeight;
 
     if (this.setState.isOverflowing !== isOverflowing) {
       this._updatingOverflow = true;

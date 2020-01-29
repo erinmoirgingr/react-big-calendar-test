@@ -37,48 +37,30 @@ function overlaps(event, events, { startAccessor, endAccessor }, last) {
   return offset
 }
 
-let DaySlot = React.createClass({
+class DaySlot extends React.Component {
 
-  propTypes: {
-    events: PropTypes.array.isRequired,
-    step: PropTypes.number.isRequired,
-    min: PropTypes.instanceOf(Date).isRequired,
-    max: PropTypes.instanceOf(Date).isRequired,
-
-    allDayAccessor: accessor.isRequired,
-    startAccessor: accessor.isRequired,
-    endAccessor: accessor.isRequired,
-
-    selectable: PropTypes.bool,
-    eventOffset: PropTypes.number,
-
-    onSelecting: PropTypes.func,
-    onSelectSlot: PropTypes.func.isRequired,
-    onSelectEvent: PropTypes.func.isRequired,
-
-    className: PropTypes.string
-  },
-
-  getInitialState() {
-    return { selecting: false };
-  },
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      selecting: false,
+    }
+  }
 
   componentDidMount() {
     this.props.selectable
     && this._selectable()
-  },
+  }
 
   componentWillUnmount() {
     this._teardownSelectable();
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectable && !this.props.selectable)
       this._selectable();
     if (!nextProps.selectable && this.props.selectable)
       this._teardownSelectable();
-  },
+  }
 
   render() {
     const {
@@ -153,7 +135,7 @@ let DaySlot = React.createClass({
     }
 
     return (
-      <TimeColumn 
+      <TimeColumn
         {...props}
         className='rbc-day-slot'
         timeslots={timeslots}
@@ -173,8 +155,7 @@ let DaySlot = React.createClass({
         }
       </TimeColumn>
     );
-
-  },
+  }
 
   renderEvents(pk) {
     let {
@@ -197,7 +178,7 @@ let DaySlot = React.createClass({
 
     events = _.filter(events, function(el, i) {
       var p = '';
-      
+
       if(typeof el.responsible_person !== 'undefined') {
         p = el.responsible_person;
       } else if(typeof el.pk !== 'undefined') {
@@ -214,7 +195,7 @@ let DaySlot = React.createClass({
     return events.map(({ event, style }, idx) => {
       let start = get(event, startAccessor)
       let end = get(event, endAccessor)
-      
+
       let title = get(event, titleAccessor)
       let label = localizer.format({ start, end }, eventTimeRangeFormat, culture);
       let _isSelected = isSelected(event, selected);
@@ -232,7 +213,7 @@ let DaySlot = React.createClass({
 
       return (
         <EventWrapper event={event}>
-          <div 
+          <div
             key={'evt_' + idx}
             style={{
              ...xStyle,
@@ -259,19 +240,19 @@ let DaySlot = React.createClass({
         </EventWrapper>
       )
     });
-  },
+  }
 
   _slotStyle(startSlot, endSlot){
 
-   
+
     let top = ((startSlot / this._totalMin) * 100);
     let bottom = ((endSlot / this._totalMin) * 100);
-    
+
     return {
       top: top + '%',
       height: bottom - top + '%',
     }
-  },
+  }
 
   _selectable(){
     let node = findDOMNode(this);
@@ -346,13 +327,13 @@ let DaySlot = React.createClass({
           this.setState({ selecting: false })
         }
       })
-  },
+  }
 
   _teardownSelectable() {
     if (!this._selector) return
     this._selector.teardown();
     this._selector = null;
-  },
+  }
 
   _selectSlot({ startDate, endDate }) {
     let current = startDate
@@ -368,13 +349,33 @@ let DaySlot = React.createClass({
       start: startDate,
       end: endDate
     })
-  },
+  }
 
   _select(event){
     clearTimeout(this._clickTimer);
     notify(this.props.onSelectEvent, event)
   }
-});
+};
+
+DaySlot.propTypes = {
+  events: PropTypes.array.isRequired,
+  step: PropTypes.number.isRequired,
+  min: PropTypes.instanceOf(Date).isRequired,
+  max: PropTypes.instanceOf(Date).isRequired,
+
+  allDayAccessor: accessor.isRequired,
+  startAccessor: accessor.isRequired,
+  endAccessor: accessor.isRequired,
+
+  selectable: PropTypes.bool,
+  eventOffset: PropTypes.number,
+
+  onSelecting: PropTypes.func,
+  onSelectSlot: PropTypes.func.isRequired,
+  onSelectEvent: PropTypes.func.isRequired,
+
+  className: PropTypes.string
+}
 
 
 function minToDate(min, date){
