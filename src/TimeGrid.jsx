@@ -56,7 +56,6 @@ export default class TimeGrid extends Component {
 
   constructor(props) {
     super(props)
-    alert(React.version);
     this.state = { gutterWidth: undefined, isOverflowing: null };
     this._selectEvent = this._selectEvent.bind(this)
     this._headerClick = this._headerClick.bind(this)
