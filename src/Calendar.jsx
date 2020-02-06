@@ -121,7 +121,7 @@ class Calendar extends React.Component {
       }
     )
 
-    let ToolbarToRender = components.toolbar || Toolbar
+    let ToolbarToRender = components.toolbar || Toolbar;
 
     return (
       <div {...elementProps}
