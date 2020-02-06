@@ -15,19 +15,19 @@ class Toolbar extends React.Component {
         <span className='rbc-btn-group'>
           <button
             type='button'
-            onClick={this.navigate.bind(null, navigate.TODAY)}
+            onClick={this.navigate.bind(this, navigate.TODAY)}
           >
             {messages.today}
           </button>
           <button
             type='button'
-            onClick={this.navigate.bind(null, navigate.PREVIOUS)}
+            onClick={this.navigate.bind(this, navigate.PREVIOUS)}
           >
             {messages.previous}
           </button>
           <button
             type='button'
-            onClick={this.navigate.bind(null, navigate.NEXT)}
+            onClick={this.navigate.bind(this, navigate.NEXT)}
           >
             {messages.next}
           </button>

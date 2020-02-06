@@ -52,6 +52,16 @@ let now = new Date();
  */
 
 class Calendar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this._navigate = this._navigate.bind(this);
+    this._headerClick = this._headerClick.bind(this);
+    this._select = this._select.bind(this);
+    this._selectSlot = this._selectSlot.bind(this);
+    this._view = this._view.bind(this);
+  }
+
   getDefaultProps() {
     return {
       popup: false,
@@ -153,7 +163,6 @@ class Calendar extends React.Component {
           onHeaderClick={this._headerClick}
           onSelectEvent={this._select}
           onSelectSlot={this._selectSlot}
-          onShowMore={this._showMore}
           view={this.props.view}
         />
       </div>
