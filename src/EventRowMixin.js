@@ -16,7 +16,7 @@ function wrapComponent(Component) {
         , startAccessor, endAccessor, titleAccessor
         , allDayAccessor, eventComponent
         , eventWrapperComponent
-        , onSelect } = this.props;
+        , onSelect } = this;
 
       return (
         <EventCell
@@ -37,7 +37,7 @@ function wrapComponent(Component) {
     }
 
     renderSpan(len, key, content = ' '){
-      let { slots } = this.props;
+      let { slots } = this;
 
       return (
         <div key={key} className='rbc-row-segment' style={segStyle(Math.abs(len), slots)}>

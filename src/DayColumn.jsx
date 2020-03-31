@@ -44,6 +44,7 @@ class DaySlot extends React.Component {
     this.state = {
       selecting: false,
     }
+    this._select = this._select.bind(this);
   }
 
   componentDidMount() {
