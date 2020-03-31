@@ -62,22 +62,6 @@ class Calendar extends React.Component {
     this._view = this._view.bind(this);
   }
 
-  getDefaultProps() {
-    return {
-      popup: false,
-      toolbar: true,
-      view: views.MONTH,
-      views: [views.MONTH, views.WEEK, views.DAY, views.AGENDA],
-      date: now,
-      step: 30,
-
-      titleAccessor: 'title',
-      allDayAccessor: 'allDay',
-      startAccessor: 'start',
-      endAccessor: 'end'
-    };
-  }
-
   getViews() {
     const views = this.props.views;
 
@@ -476,6 +460,20 @@ Calendar.propTypes = {
     agenda: PropTypes.node,
     showMore: PropTypes.func
   })
+};
+
+Calendar.defaultProps = {
+  popup: false,
+  toolbar: true,
+  view: views.MONTH,
+  views: [views.MONTH, views.WEEK, views.DAY, views.AGENDA],
+  date: now,
+  step: 30,
+
+  titleAccessor: 'title',
+  allDayAccessor: 'allDay',
+  startAccessor: 'start',
+  endAccessor: 'end'
 };
 
 export default uncontrollable(Calendar, {
