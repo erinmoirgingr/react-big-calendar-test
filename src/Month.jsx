@@ -16,7 +16,7 @@ import { request } from 'dom-helpers/animationFrame';
 import EventRow from './EventRow';
 import EventEndingRow from './EventEndingRow';
 import Popup from './Popup';
-// import { Overlay } from 'react-overlays';
+import { Overlay } from 'react-overlays';
 import BackgroundCells from './BackgroundCells';
 
 import { dateFormat } from './utils/propTypes';
@@ -317,28 +317,31 @@ class MonthView extends React.Component {
   }
 
   _renderOverlay(){
-    let overlay = (this.state && this.state.overlay) || {};
+    let overlay = ((this.state && this.state.overlay) ? this.state.overlay : {});
 
     return (
-      <Popup
-        {...this.props}
-        eventComponent={this.props.components.event}
-        eventWrapperComponent={this.props.components.eventWrapper}
-        position={overlay.position}
-        events={overlay.events}
-        slotStart={overlay.date}
-        slotEnd={overlay.end}
-        onSelect={this._selectEvent}
-      />
-      // <Overlay
-      //   rootClose
-      //   placement='bottom'
-      //   container={this}
-      //   show={!!overlay.position}
-      //   onHide={() => this.setState({ overlay: null })}
-      // >
-      //
-      // </Overlay>
+      
+      <Overlay
+         rootClose
+         placement='bottom'
+         container={this}
+         show={!!overlay.position}
+         onHide={() => this.setState({ overlay: null })}
+       >
+       {({props, arrowprops, placement}) => (
+         <Popup
+            {...props}
+            eventComponent={props.components.event}
+            eventWrapperComponent={props.components.eventWrapper}
+            position={overlay.position}
+            events={overlay.events}
+            slotStart={overlay.date}
+            slotEnd={overlay.end}
+            onSelect={selectEvent}
+          />
+       )}
+      
+       </Overlay>
     )
   }
 
