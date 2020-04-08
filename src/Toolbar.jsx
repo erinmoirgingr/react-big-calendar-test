@@ -5,6 +5,10 @@ import { navigate } from './utils/constants';
 
 class Toolbar extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.view = this.view.bind(this);
+  }
   render() {
     let { messages, label } = this.props;
 
@@ -65,7 +69,7 @@ class Toolbar extends React.Component {
         viewNames.map(name =>
           <button type='button' key={name}
             className={cn({'rbc-active': view === name})}
-            onClick={this.view.bind(null, name)}
+            onClick={() => this.view(name)}
           >
             {messages[name]}
           </button>
