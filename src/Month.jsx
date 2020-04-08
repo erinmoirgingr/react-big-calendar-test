@@ -328,7 +328,6 @@ class MonthView extends React.Component {
          show={!!overlay.position}
          onHide={() => this.setState({ overlay: null })}
        >
-       {({props, arrowprops, placement}) => (
          <Popup
             {...props}
             eventComponent={props.components.event}
@@ -339,7 +338,6 @@ class MonthView extends React.Component {
             slotEnd={overlay.end}
             onSelect={selectEvent}
           />
-       )}
       
        </Overlay>
     )
