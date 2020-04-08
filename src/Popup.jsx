@@ -17,7 +17,7 @@ class Popup extends React.Component {
 
   componentDidMount(){
     let { popupOffset = 5 } = this.props
-      , { top, left, width, height } = offset(this.refs.root)
+      , { top, left, width, height } = offset(this.refElems.root.current)
       , viewBottom = window.innerHeight + scrollTop(window)
       , viewRight = window.innerWidth + scrollLeft(window)
       , bottom = top + height
@@ -38,7 +38,7 @@ class Popup extends React.Component {
   render() {
     let { events, selected, eventComponent, eventWrapperComponent, ...props } = this.props;
 
-    let { left, width, top } = this.props.position
+    let { left, width, top } = (this.props.position || {})
       , topOffset = (this.state || {}).topOffset || 0
       , leftOffset = (this.state || {}).leftOffset || 0;
 
@@ -54,7 +54,7 @@ class Popup extends React.Component {
           { localizer.format(props.slotStart, props.dayHeaderFormat, props.culture) }
         </div>
         {
-          events.map((event, idx) =>
+          events && events.map((event, idx) =>
             <EventCell key={idx}
               {...props}
               event={event}

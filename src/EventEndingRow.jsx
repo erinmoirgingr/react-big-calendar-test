@@ -9,6 +9,7 @@ let isSegmentInSlot = (seg, slot) => seg.left <= slot && seg.right >= slot;
 let eventsInSlot = (segments, slot) => segments.filter(seg => isSegmentInSlot(seg, slot)).length
 
 class EventRow extends React.Component {
+  
   render(){
     let { segments, slots: slotCount } = this.props;
     let rowSegments = eventLevels(segments).levels[0];
@@ -31,22 +32,22 @@ class EventRow extends React.Component {
       let gap = Math.max(0, left - lastEnd);
 
       if (this.canRenderSlotEvent(left, span)) {
-        let content = this.renderEvent(event)
+        let content = this.props.renderEvent(event)
 
         if (gap)
-          row.push(this.renderSpan(gap, key + '_gap'))
+          row.push(this.props.renderSpan(gap, key + '_gap'))
 
         row.push(
-          this.renderSpan(span, key, content)
+          this.props.renderSpan(span, key, content)
         )
 
         lastEnd = current = (right + 1);
       }
       else {
         if (gap)
-          row.push(this.renderSpan(gap, key + '_gap'))
+          row.push(this.props.renderSpan(gap, key + '_gap'))
 
-        row.push(this.renderSpan(1, key, this.renderShowMore(segments, current)))
+        row.push(this.props.renderSpan(1, key, this.renderShowMore(segments, current)))
         lastEnd = current = current + 1
       }
     }

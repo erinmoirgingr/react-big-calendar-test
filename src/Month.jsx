@@ -66,6 +66,21 @@ class MonthView extends React.Component {
       rowLimit: 5,
       needLimitMeasure: true
     }
+    this._renderMeasureRows = this._renderMeasureRows.bind(this);
+    this.renderWeek = this.renderWeek.bind(this);
+    this.renderBackground = this.renderBackground.bind(this);
+    this.renderRowLevel = this.renderRowLevel.bind(this);
+    this._dateClick = this._dateClick.bind(this);
+    this._dates = this._dates.bind(this);
+    this._headers = this._headers.bind(this);
+    this._measureRowLimit = this._measureRowLimit.bind(this);
+    this._renderOverlay = this._renderOverlay.bind(this);
+    this._selectDates = this._selectDates.bind(this);
+    this._selectEvent = this._selectEvent.bind(this);
+    this._showMore = this._showMore.bind(this);
+    this.clearSelect = this.clearSelection.bind(this);
+    this.renderShowMore = this.renderShowMore.bind(this);
+  
   }
 
   componentWillMount() {
@@ -159,7 +174,7 @@ class MonthView extends React.Component {
     return (
       <div key={'week_' + weekIdx}
         className='rbc-month-row'
-        ref={!weekIdx && (r => this._firstRow = r)}
+        ref={!weekIdx ? (r => this._firstRow = r) : null}
       >
         {
           this.renderBackground(week, weekIdx)
@@ -169,7 +184,7 @@ class MonthView extends React.Component {
         >
           <div
             className='rbc-row'
-            ref={!weekIdx && (r => this._firstDateRow = r)}
+            ref={!weekIdx ? (r => this._firstDateRow = r) : null}
           >
             { this._dates(week) }
           </div>
