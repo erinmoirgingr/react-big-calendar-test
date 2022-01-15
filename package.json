@@ -72,7 +72,7 @@
     "less-plugin-autoprefix": "^2.0.0",
     "lolex": "^5.1.2",
     "markdown-jsx-loader": "^3.0.2",
-    "marked": "^0.8.0",
+    "marked": "^4.0.10",
     "mocha": "^7.0.0",
     "moment": "^2.24.0",
     "mt-changelog": "^0.6.2",
